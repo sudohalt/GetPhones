@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import urllib2 
 import re
 
@@ -6,10 +8,12 @@ phoneCompanies = ['Acer', 'Alcatel', 'Allview', 'Amazon', 'Amoi', 'Apple', 'Arch
 
 # Change all to lowercase since the html page uses lower case phone names
 phoneCompanies = [x.lower() for x in phoneCompanies]
-# Url of phone database
+# Start url of phone database
 url = 'http://www.gsmarena.com/nokia-phones-%d.php'
+# Url to use when continuing to the next pages
+next_url = 'http://www.gsmarena.com/'
 # The site has 98 different phone companies
-for i in range(1,99):
+for i in range(1,2):
 	# Get url
 	response = urllib2.urlopen(url % i)
 	# Get contents of page
@@ -25,3 +29,24 @@ for i in range(1,99):
 			if i.split(' ')[0] in phoneCompanies:
 				print "Company:" + i.split(' ')[0] + \
 					" Model:" + ' '.join(i.split(' ')[1:])
+	while (True):
+		next_page = re.findall(r'\"[A-Za-z0-9_-]*.php\" title=\"Next page\"', k) # title=\"Next Page\"', k)
+		if next_page == []: break
+		next_page = next_page[0].split(' title')[0]
+		next_page = next_page.replace('"', '')
+		# Repeat process done above
+		response = urllib2.urlopen(next_url + next_page)
+		k = response.read()
+		models = re.findall(r'[A-Za-z0-9_-]*.php', k);
+		# Go throught the parsed input, and take the relevant data and parse it further
+		for i in models:
+			if 'phones' not in i and 'review' not in i:
+				i = i.replace('-', ' ')
+				i = i.replace('.php', '')
+				i = i.replace('_', ' ')
+				if i.split(' ')[0] in phoneCompanies:
+					print "Company:" + i.split(' ')[0] + \
+						" Model:" + ' '.join(i.split(' ')[1:])
+#response = urllib2.urlopen(url + next_page)
+#		k = response.read()
+		
