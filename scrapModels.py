@@ -12,8 +12,11 @@ phoneCompanies = [x.lower() for x in phoneCompanies]
 url = 'http://www.gsmarena.com/nokia-phones-%d.php'
 # Url to use when continuing to the next pages
 next_url = 'http://www.gsmarena.com/'
+# SQL insert
+start_id = 469
+sql_insert = "INSERT INTO DEVICES(ID, TYPE, MANUFACTURER, MODEL) VALUES(%d, 'phone', '%s', '%s');"
 # The site has 98 different phone companies
-for i in range(1,2):
+for i in range(2,12):
 	# Get url
 	response = urllib2.urlopen(url % i)
 	# Get contents of page
@@ -27,8 +30,10 @@ for i in range(1,2):
 			i = i.replace('.php', '')
 			i = i.replace('_', ' ')
 			if i.split(' ')[0] in phoneCompanies:
-				print "Company:" + i.split(' ')[0] + \
-					" Model:" + ' '.join(i.split(' ')[1:])
+				print sql_insert % (start_id, i.split(' ')[0], ' '.join(i.split(' ')[1:]))
+				start_id += 1
+#print "Commpany:" + i.split(' ')[0] + \
+#					" Model:" + ' '.join(i.split(' ')[1:])
 	while (True):
 		next_page = re.findall(r'\"[A-Za-z0-9_-]*.php\" title=\"Next page\"', k) # title=\"Next Page\"', k)
 		if next_page == []: break
@@ -45,8 +50,8 @@ for i in range(1,2):
 				i = i.replace('.php', '')
 				i = i.replace('_', ' ')
 				if i.split(' ')[0] in phoneCompanies:
-					print "Company:" + i.split(' ')[0] + \
-						" Model:" + ' '.join(i.split(' ')[1:])
+						print sql_insert % (start_id, i.split(' ')[0], ' '.join(i.split(' ')[1:]))
+						start_id += 1
 #response = urllib2.urlopen(url + next_page)
 #		k = response.read()
 		
