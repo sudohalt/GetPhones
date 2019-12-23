@@ -96,3 +96,4 @@
 "XOLO phones (57)","http://www.gsmarena.com/xolo-phones-85.php"
 "Yezz phones (49)","http://www.gsmarena.com/yezz-phones-78.php"
 "ZTE phones (135)","http://www.gsmarena.com/zte-phones-62.php"
+"TEST PHONES (0)","http://testphone.test"
